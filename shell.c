@@ -13,10 +13,10 @@
  */
 int shell(char **av)
 {
-	char *line = NULL;
-	size_t len = 0;
-	int llen, exec_rtn, stop = 1, id, status;
-	char **argd;
+	char *line = NULL, *strddup;
+	size_t len = 0, toklen;
+	int llen, exec_rtn, stop = 1, id, status, i;
+	char **argd, **tokarr;
 
 	while (stop == 1)
 	{
@@ -26,17 +26,34 @@ int shell(char **av)
 			line[llen - 1] = '\0';
 		if (llen == -1 || strcmp(line, "exit") == 0)
 			break;
+		else if (strcmp(line, "") == 0)
+			continue;
+
 		id = fork();
 		if (id == 0)
 		{
-			argd = malloc(2 * sizeof(char *));
-			argd[0] = line;
-			argd[1] = NULL;
+			strddup = _strdup(line);
+
+			tokarr = _strtok(strddup, " ", &toklen);
+
+			free(strddup);
+
+			argd = malloc((toklen + 1) * sizeof(char *));
+
+			for (i = 0; tokarr[i]; i++)
+				argd[i] = tokarr[i];
+
+			argd[i] = NULL;
 			exec_rtn = execve(argd[0], argd, environ);
+
 			if (exec_rtn == -1)
 				printf("%s: No such file or directory\n", av[0]);
 			free(line);
+			for (i = 0; argd[i]; i++)
+				free(argd[i]);
 			free(argd);
+			free(tokarr);
+
 			exit(EXIT_SUCCESS);
 		}
 		else

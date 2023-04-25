@@ -5,7 +5,7 @@ extern char **environ;
 
 int shell(char **av);
 
-int lenOfStr(char *str);
+size_t lenOfStr(char *str);
 
 size_t getTokLen(char *str);
 

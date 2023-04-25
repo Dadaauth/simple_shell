@@ -10,20 +10,29 @@
  * Return: A pointer to an array of tokens
  * (arguments given to the shell)
  */
-char **_strtok(char *str, char *delim, UNUSED size_t *length)
+char **_strtok(char *str, char *delim, size_t *length)
 {
-	UNUSED size_t toklen;
-	UNUSED char *strddup, *token;
-	UNUSED char **tokarr;
+	size_t toklen, strlen;
+	char *strddup, *token;
+	char **tokarr;
+	int i = 0, j;
 
 	strddup = _strdup(str);
 	toklen = getTokLen(strddup);
+	*length = toklen;
 	free(strddup);
 	tokarr = malloc((toklen + 1) * sizeof(char *));
 	token = strtok(str, delim);
 	while (token != NULL)
 	{
-		
+		strlen = lenOfStr(token);
+		tokarr[i] = malloc((strlen + 1) * sizeof(char));
+		for (j = 0; token[j]; j++)
+			tokarr[i][j] = token[j];
+		tokarr[i][j] = '\0';
+		token = strtok(NULL, delim);
+		i++;
 	}
+	tokarr[i] = NULL;
 	return (tokarr);
 }

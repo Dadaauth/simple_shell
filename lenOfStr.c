@@ -5,10 +5,10 @@
  * @str: the string to work on
  * Return: the length of the string
  */
-int lenOfStr(char *str)
+size_t lenOfStr(char *str)
 {
 	int i;
-	int len = 0;
+	size_t len = 0;
 
 	for (i = 0; str[i]; i++)
 		len++;
