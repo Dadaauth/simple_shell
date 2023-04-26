@@ -54,11 +54,13 @@ int shell(char **av)
 {
 	char *line = NULL, *strddup, *directory = NULL;
 	size_t len = 0, toklen;
-	int llen, exec_rtn, stop = 1, id, status, UNUSED i, UNUSED rtn_pp;
+	int llen, exec_rtn, stop = 1, id, status, UNUSED i, UNUSED rtn_pp, interactive = isatty(STDIN_FILENO);
 	char **argd;
 
 	while (stop == 1)
 	{
+		if (interactive)
+			printf("$ ");
 		llen = getline(&line, &len, stdin);
 		rtn_pp = print_prompt(line, llen);
 		if (rtn_pp == 1)
