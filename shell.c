@@ -54,10 +54,12 @@ int shell(char **av)
 {
 	char *line = NULL, *strddup, *directory = NULL;
 	size_t len = 0, toklen;
-	int llen, exec_rtn, stop = 1, id, status, UNUSED i, UNUSED rtn_pp, interactive = isatty(STDIN_FILENO);
+	int llen, UNUSED exec_rtn, run = 1, id, status, UNUSED i, UNUSED rtn_pp;
+	int interactive = isatty(STDIN_FILENO);
 	char **argd;
+	static int count = 1;
 
-	while (stop == 1)
+	while (run)
 	{
 		if (interactive)
 			printf("$ ");
@@ -72,7 +74,8 @@ int shell(char **av)
 		directory = ff_in_path(argd[0]);
 		if (directory == NULL)
 		{
-			printf("%s: No such file or directory\n", av[0]);
+			printf("%s: %d: %s: not found\n", av[0], count, line);
+			count++;
 			free_in_child(line, argd, strddup, 1);
 			continue;
 		}
@@ -81,9 +84,7 @@ int shell(char **av)
 		if (id == 0)
 		{
 			printf("About to execute");
-			exec_rtn = execve(argd[0], argd, environ);
-			if (exec_rtn == -1)
-				printf("%s: No such file or directory\n", av[0]);
+			execve(argd[0], argd, environ);
 			free_in_child(line, argd, strddup, 0);
 			free(directory);
 			exit(EXIT_SUCCESS);
