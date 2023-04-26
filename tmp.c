@@ -1,1 +1,0 @@
-Inlcude strm copy 
