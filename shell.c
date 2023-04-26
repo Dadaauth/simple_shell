@@ -45,6 +45,17 @@ void free_in_child(char *line, char **argd, char *strddup, int check)
 	free(strddup);
 }
 /**
+ * sigint_handler - handles the control C signal and
+ * disallows it from stopping the shell
+ * @signum: the signal recieved
+ */
+void sigint_handler()
+{
+	printf("\n");
+	printf("$ ");
+	fflush(stdout);
+}
+/**
  * shell - first simple version of super simple shell
  * @av: argument vector of the main function passed to
  * the shell fucntion
@@ -59,6 +70,7 @@ int shell(char **av)
 	char **argd;
 	static int count = 1;
 
+	signal(SIGINT, sigint_handler);
 	while (run)
 	{
 		if (interactive)
