@@ -94,7 +94,10 @@ int shell(char **av)
 		free(strddup);
 		if (directory == NULL)
 		{
+			/**
 			printf("%s: %d: %s: not found\n", av[0], count, line);
+			*/
+			perror(av[0]);
 			count++;
 			for (i = 0; argd[i] != NULL; i++)
 				free(argd[i]);
