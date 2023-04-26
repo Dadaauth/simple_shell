@@ -92,7 +92,7 @@ int shell(char **av)
 {
 	char *line = NULL, *strddup = NULL, *directory = NULL;
 	size_t len = 0, toklen;
-	int llen, UNUSED exec_rtn, run = 1, id, status, UNUSED i, UNUSED rtn_pp;
+	int llen = 0, UNUSED exec_rtn, run = 1, id, status, UNUSED i, UNUSED rtn_pp;
 	int interactive = isatty(STDIN_FILENO);
 	char **argd = NULL;
 	static int count = 1;
@@ -102,7 +102,7 @@ int shell(char **av)
 	{
 		len = 0;
 		if (interactive)
-			printf("$ ");
+			write(1, "$ ", 2);
 		llen = getline(&line, &len, stdin);
 		rtn_pp = print_prompt(line, llen);
 		if (rtn_pp == 1)
@@ -111,7 +111,10 @@ int shell(char **av)
 			exit(EXIT_SUCCESS);
 		}
 		else if (rtn_pp == 2)
+		{
+			free(line);
 			continue;
+		}
 		else if (rtn_pp == 3)
 			print_environ();
 		strddup = _strdup(line);
