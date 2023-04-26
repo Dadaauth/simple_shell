@@ -22,6 +22,8 @@ int print_prompt(char *line, int llen)
 	}
 	if (llen == -1 || _strcmp(line, "exit") == 0)
 	{
+		if (llen == -1 && isatty(STDIN_FILENO))
+			printf("\n");
 		return (1);
 	}
 	else if (_strcmp(line, "") == 0)
