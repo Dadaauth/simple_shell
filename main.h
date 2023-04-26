@@ -21,4 +21,6 @@ int _strcmp(char *str1, char *str2);
 
 char *_strcpy(char *dest, char *src);
 
+int _isspace(char *str);
+
 #endif

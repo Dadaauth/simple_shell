@@ -26,7 +26,7 @@ int print_prompt(char *line, int llen)
 			printf("\n");
 		return (1);
 	}
-	else if (_strcmp(line, "") == 0)
+	else if (_strcmp(line, "") == 0 || _isspace(line) == 0)
 		return (2);
 	else if (_strcmp(line, "env") == 0)
 		return (3);
