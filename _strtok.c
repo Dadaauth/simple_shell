@@ -18,17 +18,20 @@ char **_strtok(char *str, char *delim, size_t *length)
 	int i = 0, j;
 
 	strddup = _strdup(str);
-	toklen = getTokLen(strddup);
+	toklen = getTokLen(strddup, delim);
 	*length = toklen;
 	free(strddup);
 	tokarr = malloc((toklen + 1) * sizeof(char *));
 	token = strtok(str, delim);
+	i = 0;
 	while (token != NULL)
 	{
 		strlen = lenOfStr(token);
 		tokarr[i] = malloc((strlen + 1) * sizeof(char));
 		for (j = 0; token[j]; j++)
+		{
 			tokarr[i][j] = token[j];
+		}
 		tokarr[i][j] = '\0';
 		token = strtok(NULL, delim);
 		i++;
