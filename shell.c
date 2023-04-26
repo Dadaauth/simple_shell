@@ -67,14 +67,18 @@ void sigint_handler(UNUSED int signum)
  */
 void print_environ()
 {
+	/**
 	extern char **environ;
 	char **envp = environ;
+	int i = 0;
+	*/
 
-	while (*envp)
+	/**while (envp[i] != NULL)
 	{
-		printf("%s\n", *envp);
-		envp++;
+		printf("%s\n", envp[i]);
+		i++;
 	}
+	*/
 }
 /**
  * shell - first simple version of super simple shell
