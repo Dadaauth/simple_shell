@@ -26,6 +26,8 @@ int print_prompt(char *line, int llen)
 	}
 	else if (_strcmp(line, "") == 0)
 		return (2);
+	else if (_strcmp(line, "env") == 0)
+		return (3);
 	return (0);
 }
 /**
@@ -59,6 +61,22 @@ void sigint_handler(UNUSED int signum)
 	fflush(stdout);
 }
 /**
+ * print_environ - prints the enviromental variables
+ * 
+ * Return: Nothing
+ */
+void print_environ()
+{
+	extern char **environ;
+	char **envp = environ;
+
+	while (*envp)
+	{
+		printf("%s\n", *envp);
+		envp++;
+	}
+}
+/**
  * shell - first simple version of super simple shell
  * @av: argument vector of the main function passed to
  * the shell fucntion
@@ -88,6 +106,8 @@ int shell(char **av)
 		}
 		else if (rtn_pp == 2)
 			continue;
+		else if (rtn_pp == 3)
+			print_environ();
 		strddup = _strdup(line);
 		argd = _strtok(strddup, " ", &toklen);
 		directory = ff_in_path(argd[0]);
