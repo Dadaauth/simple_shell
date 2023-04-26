@@ -17,11 +17,11 @@
 int print_prompt(char *line, int llen)
 {
 	if (llen > 0 && line[llen - 1] == '\n')
+	{
 		line[llen - 1] = '\0';
+	}
 	if (llen == -1 || _strcmp(line, "exit") == 0)
 	{
-		if (llen == -1)
-			printf("\n");
 		return (1);
 	}
 	else if (_strcmp(line, "") == 0)
@@ -76,12 +76,14 @@ int shell(char **av)
 	signal(SIGINT, sigint_handler);
 	while (run)
 	{
+		len = 0;
 		if (interactive)
 			printf("$ ");
 		llen = getline(&line, &len, stdin);
 		rtn_pp = print_prompt(line, llen);
 		if (rtn_pp == 1)
 		{
+			free(line);
 			exit(EXIT_SUCCESS);
 		}
 		else if (rtn_pp == 2)
@@ -94,25 +96,27 @@ int shell(char **av)
 		{
 			printf("%s: %d: %s: not found\n", av[0], count, line);
 			count++;
-			free_in_child(line, argd, 1);
+			for (i = 0; argd[i] != NULL; i++)
+				free(argd[i]);
+			free(argd);
 			continue;
 		}
+		else
+			free(line);
 		argd[0] = directory;
 		id = fork();
 		if (id == 0)
 		{
 			printf("About to execute");
 			execve(argd[0], argd, environ);
-			free_in_child(line, argd, 0);
-			free(directory);
 			exit(EXIT_SUCCESS);
 		}
 		else
 		{
 			wait(&status);
-			free(directory);
+			for (i = 0; argd[i] != NULL; i++)
+				free(argd[i]);
 			free(argd);
-			free(line);
 		}
 	}
 	free(directory);
