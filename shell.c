@@ -135,7 +135,6 @@ int shell(char **av)
 		id = fork();
 		if (id == 0)
 		{
-			printf("About to execute");
 			execve(argd[0], argd, environ);
 			exit(EXIT_SUCCESS);
 		}
