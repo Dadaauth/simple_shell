@@ -59,7 +59,6 @@ int shell(char **av)
 
 	while (stop == 1)
 	{
-		printf("$ ");
 		llen = getline(&line, &len, stdin);
 		rtn_pp = print_prompt(line, llen);
 		if (rtn_pp == 1)
