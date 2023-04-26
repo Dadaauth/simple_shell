@@ -18,9 +18,9 @@ int print_prompt(char *line, int llen)
 {
 	if (llen > 0 && line[llen - 1] == '\n')
 		line[llen - 1] = '\0';
-	if (llen == -1 || strcmp(line, "exit") == 0)
+	if (llen == -1 || _strcmp(line, "exit") == 0)
 		return (1);
-	else if (strcmp(line, "") == 0)
+	else if (_strcmp(line, "") == 0)
 		return (2);
 	return (0);
 }
@@ -59,7 +59,7 @@ int shell(char **av)
 
 	while (stop == 1)
 	{
-		printf(" ($) ");
+		printf("$ ");
 		llen = getline(&line, &len, stdin);
 		rtn_pp = print_prompt(line, llen);
 		if (rtn_pp == 1)
@@ -79,6 +79,7 @@ int shell(char **av)
 		id = fork();
 		if (id == 0)
 		{
+			printf("About to execute");
 			exec_rtn = execve(argd[0], argd, environ);
 			if (exec_rtn == -1)
 				printf("%s: No such file or directory\n", av[0]);

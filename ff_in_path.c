@@ -43,7 +43,7 @@ char *ff_in_path(char *str)
 		directory = malloc((strlen + strlen2 + 2) * sizeof(char));
 		if (directory != NULL)
 		{
-			strcpy(directory, strtow[i]);
+			_strcpy(directory, strtow[i]);
 			strcat(directory, "/");
 			strcat(directory, str);
 			i++;

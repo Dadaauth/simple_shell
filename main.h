@@ -16,4 +16,9 @@ char *_strdup(char *str);
 char **_strtok(char *str, char *delim, size_t *length);
 
 char *ff_in_path(char *str);
+
+int _strcmp(char *str1, char *str2);
+
+char *_strcpy(char *dest, char *src);
+
 #endif
