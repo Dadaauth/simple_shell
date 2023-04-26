@@ -19,7 +19,11 @@ int print_prompt(char *line, int llen)
 	if (llen > 0 && line[llen - 1] == '\n')
 		line[llen - 1] = '\0';
 	if (llen == -1 || _strcmp(line, "exit") == 0)
+	{
+		if (llen == -1)
+			printf("\n");
 		return (1);
+	}
 	else if (_strcmp(line, "") == 0)
 		return (2);
 	return (0);
@@ -33,7 +37,7 @@ int print_prompt(char *line, int llen)
  * The check is added so the function can be reuseable
  * Return: Nothing
  */
-void free_in_child(char *line, char **argd, char *strddup, int check)
+void free_in_child(char *line, char **argd, int check)
 {
 	int i;
 
@@ -42,14 +46,13 @@ void free_in_child(char *line, char **argd, char *strddup, int check)
 	for (i = 0; argd[i] != NULL; i++)
 		free(argd[i]);
 	free(argd);
-	free(strddup);
 }
 /**
  * sigint_handler - handles the control C signal and
  * disallows it from stopping the shell
  * @signum: the signal recieved
  */
-void sigint_handler()
+void sigint_handler(UNUSED int signum)
 {
 	printf("\n");
 	printf("$ ");
@@ -63,11 +66,11 @@ void sigint_handler()
  */
 int shell(char **av)
 {
-	char *line = NULL, *strddup, *directory = NULL;
+	char *line = NULL, *strddup = NULL, *directory = NULL;
 	size_t len = 0, toklen;
 	int llen, UNUSED exec_rtn, run = 1, id, status, UNUSED i, UNUSED rtn_pp;
 	int interactive = isatty(STDIN_FILENO);
-	char **argd;
+	char **argd = NULL;
 	static int count = 1;
 
 	signal(SIGINT, sigint_handler);
@@ -78,17 +81,20 @@ int shell(char **av)
 		llen = getline(&line, &len, stdin);
 		rtn_pp = print_prompt(line, llen);
 		if (rtn_pp == 1)
+		{
 			exit(EXIT_SUCCESS);
+		}
 		else if (rtn_pp == 2)
 			continue;
 		strddup = _strdup(line);
 		argd = _strtok(strddup, " ", &toklen);
 		directory = ff_in_path(argd[0]);
+		free(strddup);
 		if (directory == NULL)
 		{
 			printf("%s: %d: %s: not found\n", av[0], count, line);
 			count++;
-			free_in_child(line, argd, strddup, 1);
+			free_in_child(line, argd, 1);
 			continue;
 		}
 		argd[0] = directory;
@@ -97,14 +103,20 @@ int shell(char **av)
 		{
 			printf("About to execute");
 			execve(argd[0], argd, environ);
-			free_in_child(line, argd, strddup, 0);
+			free_in_child(line, argd, 0);
 			free(directory);
 			exit(EXIT_SUCCESS);
 		}
 		else
+		{
 			wait(&status);
+			free(directory);
+			free(argd);
+			free(line);
+		}
 	}
 	free(directory);
 	free(line);
+	free(argd);
 	return (0);
 }
