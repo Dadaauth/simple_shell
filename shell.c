@@ -118,6 +118,7 @@ int shell(char **av)
 		free(strddup);
 		if (directory == NULL)
 		{
+			free(line);
 			/**
 			printf("%s: %d: %s: not found\n", av[0], count, line);
 			*/
