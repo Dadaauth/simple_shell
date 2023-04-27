@@ -122,11 +122,12 @@ int shell(char **av)
 		free(strddup);
 		if (directory == NULL)
 		{
-			printf("%s: %d: %s: not found\n", av[0], count, line);
-			free(line);
 			/**
-			perror(av[0]);
+			printf("%s: %d: %s: not found\n", av[0], count, line);
 			*/
+			free(line);
+			execve(argd[0], argd, environ);
+			perror(av[0]);
 			count++;
 			for (i = 0; argd[i] != NULL; i++)
 				free(argd[i]);
@@ -139,8 +140,10 @@ int shell(char **av)
 		id = fork();
 		if (id == 0)
 		{
-			execve(argd[0], argd, environ);
-			exit(EXIT_SUCCESS);
+			exec_rtn = execve(argd[0], argd, environ);
+			if (exec_rtn == -1)
+				perror("execve");
+			exit(EXIT_FAILURE);
 		}
 		else
 		{
