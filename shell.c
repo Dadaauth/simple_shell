@@ -68,18 +68,15 @@ void sigint_handler(UNUSED int signum)
  */
 void print_environ()
 {
-	/**
 	extern char **environ;
 	char **envp = environ;
 	int i = 0;
-	*/
 
-	/**while (envp[i] != NULL)
+	while (envp[i] != NULL)
 	{
 		printf("%s\n", envp[i]);
 		i++;
 	}
-	*/
 }
 /**
  * shell - first simple version of super simple shell
@@ -115,7 +112,11 @@ int shell(char **av)
 			continue;
 		}
 		else if (rtn_pp == 3)
+		{
 			print_environ();
+			free(line);
+			continue;
+		}
 		strddup = _strdup(line);
 		argd = _strtok(strddup, " ", &toklen);
 		directory = ff_in_path(argd[0]);
