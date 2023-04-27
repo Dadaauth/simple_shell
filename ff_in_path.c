@@ -34,6 +34,8 @@ char *ff_in_path(char *str)
 	int strlen, strlen2, statStatus;
 	struct stat st;
 
+	if (!path && stat(str, &st) == 0)
+		return (str);
 	duppath = _strdup(path);
 	strtow = _strtok(duppath, ":", &toklen);
 	strlen2 = lenOfStr(str);

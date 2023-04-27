@@ -36,7 +36,6 @@ int print_prompt(char *line, int llen)
  * free_in_child - frees all memory that needs to be freed in the child process
  * @line: a pointer to free
  * @argd: a pointer to free
- * @strddup: a pointer to free
  * @check: checks if the function is called to free line or not.
  * The check is added so the function can be reuseable
  * Return: Nothing
