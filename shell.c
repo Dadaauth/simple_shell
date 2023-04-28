@@ -121,7 +121,7 @@ int shell(char **av)
 		if (rtn_pp == 1)
 		{
 			free(line);
-			exit(EXIT_SUCCESS);
+			exit(EXIT_FAILURE);
 		}
 		else if (rtn_pp == 2)
 		{
@@ -167,7 +167,7 @@ int shell(char **av)
 			exec_rtn = execve(argd[0], argd, environ);
 			if (exec_rtn == -1)
 				perror("execve");
-			exit();
+			exit(EXIT_FAILURE);
 		}
 		else
 		{
