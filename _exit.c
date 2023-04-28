@@ -12,8 +12,14 @@ char **_exitshell(char *str)
 {
 	char **arr;
 	size_t toklen, i;
+	char *strddup;
 
-	arr = _strtok(str, " ", &toklen);
+	if (str == NULL)
+		return (NULL);
+
+	strddup = _strdup(str);
+	arr = _strtok(strddup, " ", &toklen);
+	free(strddup);
 	if (_strcmp(arr[0], "exit") == 0)
 	{
 		return (arr);

@@ -17,23 +17,29 @@
 int print_prompt(char *line, int llen)
 {
 	char **argptr;
-	int mine;
+	int mine, i;
+	int interactive = isatty(STDIN_FILENO);
 
-	if (_strcmp(line, "\n") == 0 || _isspace(line) == 0)
+	if (interactive && (_strcmp(line, "\n") == 0 || _isspace(line) == 0))
 		return (2);
+	if (!interactive && _isspace(line) == 0)
+		return (4);
+	if (interactive && (llen == -1 || _strcmp(line, "exit\n") == 0))
+	{
+		if (llen == -1 && interactive)
+			printf("\n");
+		return (1);
+	}
 	if (llen > 0 && line[llen - 1] == '\n')
 	{
 		line[llen - 1] = '\0';
 	}
-	if (llen == -1 || _strcmp(line, "exit") == 0)
+	if (_strcmp(line, "env") == 0)
 	{
-		if (llen == -1 && isatty(STDIN_FILENO))
-			printf("\n");
-		return (1);
-	}
-	else if (_strcmp(line, "env") == 0)
 		return (3);
-	else if ((argptr = _exitshell(line)) != NULL)
+	}
+	argptr = _exitshell(line);
+	if (argptr != NULL)
 	{
 		if (argptr[1] == NULL)
 		{
@@ -42,8 +48,9 @@ int print_prompt(char *line, int llen)
 			return (1);
 		}
 		mine = 100 + atoi(argptr[1]);
-		free(argptr[0]);
-		free(argptr[1]);
+
+		for (i = 0; argptr[i] != NULL; i++)
+			free(argptr[i]);
 		free(argptr);
 		return (mine);
 	}
@@ -109,14 +116,31 @@ int shell(char **av)
 	int interactive = isatty(STDIN_FILENO);
 	char **argd = NULL;
 	static int count = 1;
+	char buffer[BUFSIZ];
 
 	signal(SIGINT, sigint_handler);
 	while (run)
 	{
 		len = 0;
 		if (interactive)
+		{
 			write(1, "$ ", 2);
-		llen = getline(&line, &len, stdin);
+			llen = getline(&line, &len, stdin);
+		}
+		if (!interactive)
+		{
+			llen = read(STDIN_FILENO, buffer, BUFSIZ);
+			if (llen == 0)
+			{
+				break;
+			}
+			else if (llen == -1)
+			{
+				perror("read");
+				break;
+			}
+			line = buffer;
+		}
 		rtn_pp = print_prompt(line, llen);
 		if (rtn_pp == 1)
 		{
@@ -134,9 +158,14 @@ int shell(char **av)
 			free(line);
 			continue;
 		}
+		else if (rtn_pp == 4)
+		{
+			break;
+		}
 		else if (rtn_pp > 100)
 		{
-			free(line);
+			if (interactive)
+				free(line);
 			exit(rtn_pp - 100);
 		}
 
@@ -144,12 +173,13 @@ int shell(char **av)
 		argd = _strtok(strddup, " ", &toklen);
 		directory = ff_in_path(argd[0]);
 		free(strddup);
+		if (interactive)
+			free(line);
 		if (directory == NULL)
 		{
 			/**
 			printf("%s: %d: %s: not found\n", av[0], count, line);
 			*/
-			free(line);
 			execve(argd[0], argd, environ);
 			perror(av[0]);
 			count++;
@@ -159,7 +189,6 @@ int shell(char **av)
 			continue;
 		}
 		else
-			free(line);
 		argd[0] = directory;
 		id = fork();
 		if (id == 0)
@@ -177,8 +206,11 @@ int shell(char **av)
 			free(argd);
 		}
 	}
-	free(directory);
-	free(line);
-	free(argd);
+	/**
+	 * free(directory);
+	 */
+	/**
+	 * free(argd);
+	 */
 	return (0);
 }
