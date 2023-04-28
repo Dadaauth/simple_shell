@@ -16,11 +16,19 @@
  */
 int print_prompt(char *line, int llen)
 {
+	char **argptr;
+
 	if (llen > 0 && line[llen - 1] == '\n')
 	{
 		line[llen - 1] = '\0';
 	}
-	if (llen == -1 || _strcmp(line, "exit") == 0)
+	if ((argptr = _exitshell(line)) != NULL)
+	{
+		if (argptr[1] == NULL)
+			return (1);
+		return (100 + atoi(argptr[1]));
+	}
+	if (llen == -1)
 	{
 		if (llen == -1 && isatty(STDIN_FILENO))
 			printf("\n");
@@ -117,6 +125,9 @@ int shell(char **av)
 			free(line);
 			continue;
 		}
+		else if (rtn_pp > 100)
+			exit(rtn_pp - 100);
+
 		strddup = _strdup(line);
 		argd = _strtok(strddup, " ", &toklen);
 		directory = ff_in_path(argd[0]);

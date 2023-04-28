@@ -23,4 +23,6 @@ char *_strcpy(char *dest, char *src);
 
 int _isspace(char *str);
 
+char **_exitshell(char *str);
+
 #endif
