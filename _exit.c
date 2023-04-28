@@ -11,12 +11,15 @@
 char **_exitshell(char *str)
 {
 	char **arr;
-	size_t toklen; 
+	size_t toklen, i;
 
 	arr = _strtok(str, " ", &toklen);
 	if (_strcmp(arr[0], "exit") == 0)
 	{
 		return (arr);
 	}
+	for (i = 0; i < toklen; i++)
+		free(arr[i]);
+	free(arr);
 	return (NULL);
 }

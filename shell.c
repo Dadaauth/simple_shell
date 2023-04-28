@@ -17,27 +17,36 @@
 int print_prompt(char *line, int llen)
 {
 	char **argptr;
+	int mine;
 
+	if (_strcmp(line, "\n") == 0 || _isspace(line) == 0)
+		return (2);
 	if (llen > 0 && line[llen - 1] == '\n')
 	{
 		line[llen - 1] = '\0';
 	}
-	if ((argptr = _exitshell(line)) != NULL)
-	{
-		if (argptr[1] == NULL)
-			return (1);
-		return (100 + atoi(argptr[1]));
-	}
-	if (llen == -1)
+	if (llen == -1 || _strcmp(line, "exit") == 0)
 	{
 		if (llen == -1 && isatty(STDIN_FILENO))
 			printf("\n");
 		return (1);
 	}
-	else if (_strcmp(line, "") == 0 || _isspace(line) == 0)
-		return (2);
 	else if (_strcmp(line, "env") == 0)
 		return (3);
+	else if ((argptr = _exitshell(line)) != NULL)
+	{
+		if (argptr[1] == NULL)
+		{
+			free(argptr[0]);
+			free(argptr);
+			return (1);
+		}
+		mine = 100 + atoi(argptr[1]);
+		free(argptr[0]);
+		free(argptr[1]);
+		free(argptr);
+		return (mine);
+	}
 	return (0);
 }
 /**
@@ -126,7 +135,10 @@ int shell(char **av)
 			continue;
 		}
 		else if (rtn_pp > 100)
+		{
+			free(line);
 			exit(rtn_pp - 100);
+		}
 
 		strddup = _strdup(line);
 		argd = _strtok(strddup, " ", &toklen);
