@@ -121,7 +121,7 @@ int shell(char **av)
 		if (rtn_pp == 1)
 		{
 			free(line);
-			exit(EXIT_FAILURE);
+			exit(EXIT_SUCCESS);
 		}
 		else if (rtn_pp == 2)
 		{
