@@ -167,7 +167,7 @@ int shell(char **av)
 			exec_rtn = execve(argd[0], argd, environ);
 			if (exec_rtn == -1)
 				perror("execve");
-			exit(EXIT_FAILURE);
+			exit(2);
 		}
 		else
 		{
