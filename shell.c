@@ -179,7 +179,7 @@ int shell(char **av)
 			free(argd);
 			free(strddup);
 			if (!interactive)
-				break;
+				exit(EXIT_SUCCESS);
 			free(line);
 			continue;
 		}
