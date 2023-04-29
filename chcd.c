@@ -15,6 +15,7 @@ void _cd_dir(char *str[])
 	char *home_dir;
 	char cwd[MAX_BUFFER_SIZE];
 
+	printf("/root");
 	if (str[1] == NULL)
 	{
 		home_dir = getenv("HOME");
