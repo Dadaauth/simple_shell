@@ -171,6 +171,11 @@ int shell(char **av)
 
 		strddup = _strdup(line);
 		argd = _strtok(strddup, " ", &toklen);
+		if (_strcmp(argd[0], "cd") == 0)
+		{
+			_cd_dir(argd);
+			continue;
+		}
 		directory = ff_in_path(argd[0]);
 		free(strddup);
 		if (interactive)

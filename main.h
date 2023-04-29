@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #define UNUSED __attribute__((unused))
+#define MAX_BUFFER_SIZE 1024
 
 extern char **environ;
 
@@ -24,5 +25,7 @@ char *_strcpy(char *dest, char *src);
 int _isspace(char *str);
 
 char **_exitshell(char *str);
+
+void _cd_dir(char *str[]);
 
 #endif
