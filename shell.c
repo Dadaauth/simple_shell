@@ -23,6 +23,7 @@ int interactive_launch(int UNUSED ac, char UNUSED **av, char  UNUSED **envp)
 	size_t len = 0, toklen;
 	int llen, size = 0, i, id, exec_rtn, status;
 	char *strddup;
+	static int count = 1;
 
 	signal(SIGINT, sigint_handler);
 	while (size == 0)
@@ -48,8 +49,8 @@ int interactive_launch(int UNUSED ac, char UNUSED **av, char  UNUSED **envp)
 		free(strddup);
 		if (directory == NULL)
 		{
-			execve(argd[0], argd, envp);
-			perror(av[0]);
+			fprintf(stderr, "%s: %d : %s: not found\n", av[0], count, argd[0]);
+			count++;
 			for (i = 0; argd[i] != NULL; i++)
 				free(argd[i]);
 			free(argd);
@@ -77,6 +78,7 @@ int interactive_launch(int UNUSED ac, char UNUSED **av, char  UNUSED **envp)
 int non_interactive_launch(int UNUSED ac, char UNUSED **av, char UNUSED **envp)
 {
 	int llen, i, id, exec_rtn, status;
+	static int count = 1;
 	char *line = NULL, **argd = NULL, *strddup, *directory = NULL;
 	char *buffer = malloc(BUFSIZ);
 	size_t toklen;
@@ -103,8 +105,8 @@ int non_interactive_launch(int UNUSED ac, char UNUSED **av, char UNUSED **envp)
 	free(line);
 	if (directory == NULL)
 	{
-		execve(argd[0], argd, envp);
-		perror(av[0]);
+		fprintf(stderr, "%s: %d : %s: not found\n", av[0], count, argd[0]);
+		count++;
 		for (i = 0; argd[i] != NULL; i++)
 			free(argd[i]);
 		free(argd);
