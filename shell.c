@@ -63,7 +63,7 @@ int interactive_launch(int UNUSED ac, char UNUSED **av, char  UNUSED **envp)
 			exec_rtn = execve(argd[0], argd, envp);
 			if (exec_rtn == -1)
 				perror("execve");
-			exit(2);
+			exit(EXIT_FAILURE);
 		}
 		else
 		{
@@ -119,7 +119,10 @@ int non_interactive_launch(int UNUSED ac, char UNUSED **av, char UNUSED **envp)
 		exec_rtn = execve(argd[0], argd, envp);
 		if (exec_rtn == -1)
 			perror("execve");
-		exit(2);
+		for (i = 0; argd[i] != NULL; i++)
+			free(argd[i]);
+		free(argd);
+		exit(EXIT_FAILURE);
 	}
 	else
 	{
