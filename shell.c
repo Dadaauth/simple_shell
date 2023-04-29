@@ -174,6 +174,13 @@ int shell(char **av)
 		if (_strcmp(argd[0], "cd") == 0)
 		{
 			_cd_dir(argd);
+			for (i = 0; argd[i] != NULL; i++)
+				free(argd[i]);
+			free(argd);
+			free(strddup);
+			if (!interactive)
+				break;
+			free(line);
 			continue;
 		}
 		directory = ff_in_path(argd[0]);
