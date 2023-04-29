@@ -28,4 +28,8 @@ char **_exitshell(char *str);
 
 void _cd_dir(char *str[]);
 
+int shell_setenv(char **args);
+
+int shell_unsetenv(char **args);
+
 #endif

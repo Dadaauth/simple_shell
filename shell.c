@@ -171,6 +171,28 @@ int shell(char **av)
 
 		strddup = _strdup(line);
 		argd = _strtok(strddup, " ", &toklen);
+		if (_strcmp(argd[0], "setenv") == 0)
+		{
+			shell_setenv(argd);
+			for (i = 0; argd[i]; i++)
+				free(argd[i]);
+			free(argd);
+			free(strddup);
+			if (interactive)
+				continue;
+			break;
+		}
+		else if (_strcmp(argd[0], "unsetenv") == 0)
+		{
+			shell_unsetenv(argd);
+			for (i = 0; argd[i]; i++)
+				free(argd[i]);
+			free(argd);
+			free(strddup);
+			if (interactive)
+				continue;
+			break;
+		}
 		if (_strcmp(argd[0], "cd") == 0)
 		{
 			_cd_dir(argd);
